@@ -30,3 +30,6 @@ Finalizamos en deploy con instalacion de imagenes y ejecucion de docker-compose-
 
 ![image](https://github.com/manuelteran93/docker-compose-elk/assets/104144485/f8e90b74-0ba0-48c7-a116-80761ffa2c6f)
 
+![image](https://github.com/manuelteran93/docker-compose-elk/assets/104144485/2e20a8f8-9319-45b7-bcfe-9fb73b22304c)
+
+
