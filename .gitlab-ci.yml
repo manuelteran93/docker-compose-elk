@@ -1,0 +1,56 @@
+stages:
+  - clean
+  - pre-deploy
+  - deploy
+
+clean:
+  stage: clean
+  tags:
+    - CI
+  script:
+    - set -x  # Activa la traza de comandos para depuración.
+    - 'command -v ssh-agent >/dev/null || ( apt-get update && apt-get install -y openssh-client )'  # Verifica y, si es necesario, instala el cliente SSH.
+    - eval $(ssh-agent -s)  # Inicia el agente SSH.
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -  # Agrega la clave SSH privada al agente.
+    - mkdir -p ~/.ssh  # Crea el directorio .ssh en el usuario actual.
+    - chmod 700 ~/.ssh  # Cambia los permisos del directorio .ssh para asegurarse de que solo el usuario pueda acceder.
+    - ssh-keyscan 10.0.2.15 >> ~/.ssh/known_hosts  # Escanea y agrega la clave pública del servidor SSH al archivo known_hosts.
+    - chmod 700 ~/.ssh/known_hosts  # Cambia los permisos del archivo known_hosts para asegurarse de que solo el usuario pueda acceder.
+    - ssh jesus@10.0.2.15 "echo 'Hello from Linux'"  # Ejecuta un comando SSH en el servidor remoto para verificar la conexión.
+    - echo "Cleaning up previous artifacts"  # Mensaje de depuración.
+    - ssh jesus@10.0.2.15 "cd /home/jesus/Descargas/prueba-despliegue && rm -f docker-compose-elk.yml"  # Navega al directorio y elimina el archivo docker-compose-elk.yml en el servidor remoto.
+  artifacts:
+    paths:
+      - docker-compose-elk.yml
+
+pre-deploy:
+  stage: pre-deploy
+  tags:
+    - CI
+  script:
+    - echo "Preparing for deployment"  # Mensaje de depuración.
+  artifacts:
+    paths:
+      - docker-compose-elk.yml
+    
+deploy:
+  stage: deploy
+  tags:
+    - CI
+  script:
+    - set -x  # Activa la traza de comandos para depuración.
+    - 'command -v ssh-agent >/dev/null || ( apt-get update && apt-get install -y openssh-client )'  # Verifica y, si es necesario, instala el cliente SSH.
+    - eval $(ssh-agent -s)  # Inicia el agente SSH.
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -  # Agrega la clave SSH privada al agente.
+    - mkdir -p ~/.ssh  # Crea el directorio .ssh en el usuario actual.
+    - chmod 700 ~/.ssh  # Cambia los permisos del directorio .ssh para asegurarse de que solo el usuario pueda acceder.
+    - ssh-keyscan 10.0.2.15 >> ~/.ssh/known_hosts  # Escanea y agrega la clave pública del servidor SSH al archivo known_hosts.
+    - chmod 700 ~/.ssh/known_hosts  # Cambia los permisos del archivo known_hosts para asegurarse de que solo el usuario pueda acceder.
+    - ssh jesus@10.0.2.15 "echo 'Hello from Linux'"  # Ejecuta un comando SSH en el servidor remoto para verificar la conexión.
+    - scp docker-compose-elk.yml jesus@10.0.2.15:/home/jesus/Descargas/prueba-despliegue  # Copia el archivo al servidor remoto.
+    - ssh jesus@10.0.2.15 "cd /home/jesus/Descargas/prueba-despliegue && docker-compose -f docker-compose-elk.yml up -d"  # Navega al directorio y ejecuta docker-compose en el servidor remoto.
+    - echo "Copying files to server..."  # Mensaje de depuración.
+    - echo "Finalizo Exitosamente"  # Mensaje de depuración.
+  artifacts:
+    paths:
+      - docker-compose-elk.yml
