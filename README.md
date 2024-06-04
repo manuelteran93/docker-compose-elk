@@ -1,4 +1,6 @@
 # Proyecto Final
+La finalidad del proyecto es crear un laboratoyio de pruebas para el equipo de QA, donde se levantara servicio de selenium donde se ejecutaran pruebas y sera adquirido y deployado con docker, asu vez sera entregado en un pipiline, donde se ejecutara y se iniciara el servicio, y empezara hacer pruebas de test.
+
 Create docker-compose-elk
 
 Creamos un laboratario en una VM-Ubuntu.
