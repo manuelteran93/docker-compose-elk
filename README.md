@@ -34,4 +34,7 @@ Finalizamos en deploy con instalacion de imagenes y ejecucion de docker-compose-
 
 ![image](https://github.com/manuelteran93/docker-compose-elk/assets/104144485/2e20a8f8-9319-45b7-bcfe-9fb73b22304c)
 
+Nota:
+Se que me faltaron mas cosas, pero por falta de tiempo no pude culminarlas, espero que me puedan ayudar a lograr obtener el certificado. Gracias.
+
 
